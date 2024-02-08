@@ -9,6 +9,8 @@ import { ICreatePrincipalRequest } from '../Requests/ICreatePrincipalRequest';
 import { IOperationStatusResponse } from '../../../Common/Responses/IOperationStatusResponse';
 import { IUpdatePrincipalRequest } from '../Requests/IUpdatePrincipalRequest';
 import { IDeletePrincipalResponse } from '../Responses/IDeletePrincipalResponse';
+import { IDropDownResponse } from '../../../Common/Responses/IDropDownResponse';
+import { IInitUpdatePrincipalResponse } from '../Responses/IInitUpdatePrincipalResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -41,5 +43,13 @@ export class PrincipalService {
 
   DeletePrincipal(request: IIdRequest): Observable<IDeletePrincipalResponse> {
     return this.http.post<IDeletePrincipalResponse>(this.principalUrl + "DeletePrincipal", request);
+  }
+
+  GetSchoolsDropDown(): Observable<IDropDownResponse>{
+    return this.http.get<IDropDownResponse>(this.principalUrl + "GetSchoolsDropDown");
+  }
+
+  InitUpdatePrincipal(request: IIdRequest): Observable<IInitUpdatePrincipalResponse> {
+    return this.http.post<IInitUpdatePrincipalResponse>(this.principalUrl + "InitUpdatePrincipal", request);
   }
 }
