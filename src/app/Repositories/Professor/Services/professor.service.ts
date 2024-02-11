@@ -9,6 +9,8 @@ import { ICreateProfessorRequest } from '../Requests/ICreateProfessorRequest';
 import { IOperationStatusResponse } from '../../../Common/Responses/IOperationStatusResponse';
 import { IUpdatePrincipalRequest } from '../../Principal/Requests/IUpdatePrincipalRequest';
 import { IDeleteProfessorResponse } from '../Responses/IDeleteProfessorResponse';
+import { IDropDownResponse } from '../../../Common/Responses/IDropDownResponse';
+import { IInitUpdateProfessorResponse } from '../Responses/IInitUpdateProfessorResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -41,5 +43,13 @@ export class ProfessorService {
 
   DeleteProfessor(request: IIdRequest): Observable<IDeleteProfessorResponse>{
     return this.http.post<IDeleteProfessorResponse>(this.professorUrl + "DeleteProfessor", request);
+  }
+
+  GetSchoolsDropDown(): Observable<IDropDownResponse>{
+    return this.http.get<IDropDownResponse>(this.professorUrl + "GetSchoolsDropDown");
+  }
+
+  InitUpdateProfessor(request: IIdRequest): Observable<IInitUpdateProfessorResponse> {
+    return this.http.post<IInitUpdateProfessorResponse>(this.professorUrl + "InitUpdateProfessor", request);
   }
 }
