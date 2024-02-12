@@ -7,6 +7,7 @@ import { ListProfessorComponent } from './Repositories/Professor/Components/list
 import { CreateProfessorComponent } from './Repositories/Professor/Components/create-professor/create-professor.component';
 import { UpdateProfessorComponent } from './Repositories/Professor/Components/update-professor/update-professor.component';
 import { ListSubjectComponent } from './Repositories/Subject/Components/list-subject/list-subject.component';
+import { ListStudentComponent } from './Repositories/Student/Components/list-student/list-student.component';
 
 export const routes: Routes = [
     //school
@@ -22,4 +23,6 @@ export const routes: Routes = [
     { path: 'update-professor/:id', component: UpdateProfessorComponent },
     //subject
     { path: 'list-subjects', component: ListSubjectComponent },
+    //student
+    { path: 'list-students', component: ListStudentComponent },
 ];

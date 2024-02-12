@@ -1,0 +1,60 @@
+<div class="grid grid-cols-1 md:grid-cols-5">
+
+    <div class="md:col-span-4">
+      <h1 class="text-center my-5 text-6xl dark:text-white">Students list</h1>
+    </div>
+  
+    <div class="text-center">
+      <a class="my-6 py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-cyan-500 text-white hover:bg-cyan-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" routerLink="/create-student">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+        Add Student
+      </a>
+    </div>
+  
+  </div>
+
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th class="text-center px-6 py-3">Id</th>
+            <th class="text-center px-6 py-3">Name</th>
+            <th class="text-center px-6 py-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+            @for(student of students; track $index){
+                <tr class="text-center px-6 py-4">
+                    <td>{{student.id}}</td>
+                    <td>{{student.name}}</td>
+                    <td>
+                        <a class="mx-1 py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-500 text-white hover:bg-teal-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" [routerLink]="'/update-student/' + student.id">
+                            Edit
+                          </a>
+                          <a class="mx-1 py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" (click)="deleteStudent(student.id)">
+                            Delete
+                          </a>
+                    </td>
+                </tr>
+                @for(subject of student.subjects; track $index){
+                    <tr class="text-center px-6 py-4 bg-cyan-500 text-white">
+                        @if(subject.isMajor){
+                            <td colspan="2">{{subject.name}} => MAYOR</td>
+                        }
+                        @else{
+                            <td colspan="2">{{subject.name}}</td>
+                        }
+                        <td>
+                            <a class="mx-1 py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-yellow-500 text-white hover:bg-yellow-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" (click)="setMajor(student.id, subject.id)">
+                                Set Major
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+      </table>
+</div>
+
