@@ -1,0 +1,54 @@
+<h1 class="text-center my-5 text-6xl dark:text-white">Create Student</h1>
+
+<div class="relative mx-5 my-1">
+    <input [(ngModel)]="request.name"  type="text" id="hs-floating-input-email" class="border-2 border-lime-500 peer p-4 block w-full md:w-1/2 rounded-lg text-sm placeholder:text-transparent focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600
+    focus:pt-6
+    focus:pb-2
+    [&:not(:placeholder-shown)]:pt-6
+    [&:not(:placeholder-shown)]:pb-2
+    autofill:pt-6
+    autofill:pb-2">
+    <label for="hs-floating-input-email" class="absolute top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent dark:text-white peer-disabled:opacity-50 peer-disabled:pointer-events-none
+      peer-focus:text-xs
+      peer-focus:-translate-y-1.5
+      peer-focus:text-gray-500
+      peer-[:not(:placeholder-shown)]:text-xs
+      peer-[:not(:placeholder-shown)]:-translate-y-1.5
+      peer-[:not(:placeholder-shown)]:text-gray-500">Student name
+    </label>
+</div>
+
+<div class="p-2 m-5">
+    
+    <h3>Available Subjects</h3>
+
+    <ul class="list-group">
+
+        @for (option of subjectOptions; track $index)
+        {
+            <li class="list-group-item">
+
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" [(ngModel)]="option.isSelected" (change)="updateSelectedValues(option)">
+                    <label class="form-check-label">
+                        {{option.name}}
+                    </label>
+
+                    @if(option.isSelected){
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="option.isMajor" (change)="updateMajor(option)">
+                        <label class="form-check-label">
+                            Is major
+                        </label>
+                    }
+                </div>
+
+            </li>
+        }
+
+    </ul>
+
+</div>
+
+<button type="button" class="ml-5 my-6 py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-cyan-500 text-white hover:bg-cyan-600 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" (click)="CreateStudent()">
+  Create Student
+</button>

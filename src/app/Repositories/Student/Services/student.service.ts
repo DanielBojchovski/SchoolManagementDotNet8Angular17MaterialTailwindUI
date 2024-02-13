@@ -12,6 +12,7 @@ import { ICreateStudentRequest } from '../Requests/ICreateStudentRequest';
 import { IUpdateStudentRequest } from '../Requests/IUpdateStudentRequest';
 import { IDeleteStudentResponse } from '../Responses/IDeleteStudentResponse';
 import { ISetNewMajorForStudentResponse } from '../Responses/ISetNewMajorForStudentResponse';
+import { IGetAvailableSubjectsResponse } from '../Responses/IGetAvailableSubjectsResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -48,5 +49,9 @@ export class StudentService {
 
   DeleteStudent(request: IIdRequest): Observable<IDeleteStudentResponse>{
     return this.http.post<IDeleteStudentResponse>(this.studentUrl + "DeleteStudent", request);
+  }
+
+  GetAvailableSubjects(): Observable<IGetAvailableSubjectsResponse> {
+    return this.http.get<IGetAvailableSubjectsResponse>(this.studentUrl + "GetAvailableSubjects");
   }
 }
