@@ -58,5 +58,6 @@ export class CreateStudentComponent implements OnInit {
 
   updateMajor(option: ISubjectDto){
     this.request.subjects.forEach(x => x.isMajor = x.subjectId === option.id);
+    this.subjectOptions.forEach(x => x.isMajor = x.id === option.id);
   }
 }
