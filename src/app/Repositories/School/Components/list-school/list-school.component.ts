@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, WritableSignal, signal } from '@angular/core';
 import { SchoolService } from '../../Services/school.service';
 import { take } from 'rxjs';
 import { ISchoolModel } from '../../Models/ISchoolModel';
@@ -19,33 +19,33 @@ export class ListSchoolComponent implements OnInit {
 
   constructor(private service: SchoolService,private _snackBar: MatSnackBar){}
 
-  schools: ISchoolModel[] = [];
+  schools: WritableSignal<ISchoolModel[]> = signal([]);
 
-  schoolName: string = "";
+  schoolName: WritableSignal<string> = signal("");
 
   ngOnInit(): void {
     this.service.GetAllSchools().pipe(take(1)).subscribe(x => {
-      this.schools = x.list;
+      this.schools.set(x.list);
     })
   }
 
   CreateSchool(){
-    if(this.schoolName.trim() === ""){
+    if(this.schoolName().trim() === ""){
       return;
     }
 
     let request: ICreateSchoolRequest = {
-      name: this.schoolName
+      name: this.schoolName()
     }
 
     this.service.CreateSchool(request).pipe(take(1)).subscribe(x => {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("School created!", "Close");
-        this.schools = x.getAllSchoolsResponse.list;
+        this.schools.set(x.getAllSchoolsResponse.list);
       }
     })
 
-    this.schoolName = "";
+    this.schoolName.set("");
   }
 
   UpdateSchool(school: ISchoolModel){
@@ -61,7 +61,7 @@ export class ListSchoolComponent implements OnInit {
     this.service.UpdateSchool(request).pipe(take(1)).subscribe(x => {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("School updated!", "Close");
-        this.schools = x.getAllSchoolsResponse.list;
+        this.schools.set(x.getAllSchoolsResponse.list);
       }
     })
   }
@@ -74,7 +74,7 @@ export class ListSchoolComponent implements OnInit {
     this.service.DeleteSchool(request).pipe(take(1)).subscribe(x => {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("School deleted!", "Close");
-        this.schools = x.getAllSchoolsResponse.list;
+        this.schools.set(x.getAllSchoolsResponse.list);
       }
     })
   }
