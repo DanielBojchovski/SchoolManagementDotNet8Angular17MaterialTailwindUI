@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, WritableSignal, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SubjectService } from '../../Services/subject.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -19,33 +19,33 @@ export class ListSubjectComponent implements OnInit {
 
   constructor(private service: SubjectService,private _snackBar: MatSnackBar){}
 
-  subjects: ISubjectModel[] = [];
+  subjects: WritableSignal<ISubjectModel[]> = signal([]);
 
-  subjectName: string = "";
+  subjectName: WritableSignal<string> = signal("");
 
   ngOnInit(): void {
     this.service.GetAllSubjects().pipe(take(1)).subscribe(x => {
-      this.subjects = x.list;
+      this.subjects.set(x.list);
     })
   }
 
   CreateSubject(){
-    if(this.subjectName.trim() === ""){
+    if(this.subjectName().trim() === ""){
       return;
     }
 
     let request: ICreateSubjectRequest = {
-      name: this.subjectName
+      name: this.subjectName()
     }
 
     this.service.CreateSubject(request).pipe(take(1)).subscribe(x => {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("Subject created!", "Close");
-        this.subjects = x.getAllSubjectsResponse.list;
+        this.subjects.set(x.getAllSubjectsResponse.list);
       }
     })
 
-    this.subjectName = "";
+    this.subjectName.set("");
   }
 
   UpdateSubject(school: ISubjectModel){
@@ -61,12 +61,12 @@ export class ListSubjectComponent implements OnInit {
     this.service.UpdateSubject(request).pipe(take(1)).subscribe(x => {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("Subject updated!", "Close");
-        this.subjects = x.getAllSubjectsResponse.list;
+        this.subjects.set(x.getAllSubjectsResponse.list);
       }
     })
   }
 
-  DeleteSchool(school: ISubjectModel){
+  DeleteSubject(school: ISubjectModel){
     let request: IIdRequest = {
       id: school.id
     }
@@ -74,7 +74,7 @@ export class ListSubjectComponent implements OnInit {
     this.service.DeleteSubject(request).pipe(take(1)).subscribe(x => {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("Subject deleted!", "Close");
-        this.subjects = x.getAllSubjectsResponse.list;
+        this.subjects.set(x.getAllSubjectsResponse.list);
       }
     })
   }
