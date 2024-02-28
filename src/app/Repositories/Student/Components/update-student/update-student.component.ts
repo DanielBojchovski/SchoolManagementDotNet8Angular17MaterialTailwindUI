@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, WritableSignal, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StudentService } from '../../Services/student.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -21,13 +21,13 @@ export class UpdateStudentComponent implements OnInit {
 
   constructor(private service: StudentService, private _snackBar: MatSnackBar, private router: Router, private activatedRoute: ActivatedRoute){}
 
-  student: IStudentModel | null = null;
+  student: WritableSignal<IStudentModel | null> = signal(null);
 
-  request: IUpdateStudentRequest = {
+  request: WritableSignal<IUpdateStudentRequest> = signal({
     id: 0,
     name: "",
     subjects: []
-  }
+  });
 
   ngOnInit(): void {
     this.activatedRoute.paramMap
@@ -38,9 +38,9 @@ export class UpdateStudentComponent implements OnInit {
           let idRequest: IIdRequest = {id: parseInt(id)};
           this.service.GetStudentById(idRequest).pipe(take(1)).subscribe(x => {
               if(x){
-                this.student = x;
-                this.request.id = idRequest.id;
-                this.request.subjects = x.subjects.filter(x => x.isSelected).map(x => ({subjectId: x.id, isMajor: x.isMajor}));
+                this.student.set(x);
+                this.request().id = idRequest.id;
+                this.request().subjects = x.subjects.filter(x => x.isSelected).map(x => ({subjectId: x.id, isMajor: x.isMajor}));
               }
             })
         }
@@ -49,11 +49,11 @@ export class UpdateStudentComponent implements OnInit {
   }
 
   UpdateStudent(){
-    this.request.name = this.student!.name;
-    if(this.request.name.trim() === "") return;
-    if(this.request.subjects.length === 0) return;
+    this.request().name = this.student()!.name;
+    if(this.request().name.trim() === "") return;
+    if(this.request().subjects.length === 0) return;
 
-    this.service.UpdateStudent(this.request).pipe(take(1)).subscribe(x => {
+    this.service.UpdateStudent(this.request()).pipe(take(1)).subscribe(x => {
       if(x.isSuccessful){
         this._snackBar.open("Student updated!", "Close");
         this.router.navigate(['/list-students']);
@@ -67,14 +67,14 @@ export class UpdateStudentComponent implements OnInit {
         subjectId: option.id,
         isMajor: option.isMajor
       }
-      this.request.subjects.push(newOption);
+      this.request().subjects.push(newOption);
     } else {
-      this.request.subjects = this.request.subjects.filter(x => x.subjectId !== option.id);
+      this.request().subjects = this.request().subjects.filter(x => x.subjectId !== option.id);
     }
   }
 
   updateMajor(option: ISubjectDto){
-    this.request.subjects.forEach(x => x.isMajor = x.subjectId === option.id);
-    this.student!.subjects.forEach(x => x.isMajor = x.id === option.id);
+    this.request().subjects.forEach(x => x.isMajor = x.subjectId === option.id);
+    this.student()!.subjects.forEach(x => x.isMajor = x.id === option.id);
   }
 }

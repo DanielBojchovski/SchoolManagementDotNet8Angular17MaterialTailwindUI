@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, WritableSignal, signal } from '@angular/core';
 import { ICreateStudentRequest } from '../../Requests/ICreateStudentRequest';
 import { FormsModule } from '@angular/forms';
 import { StudentService } from '../../Services/student.service';
@@ -21,10 +21,10 @@ export class CreateStudentComponent implements OnInit {
 
   subjectOptions: ISubjectDto[] = [];
 
-  request: ICreateStudentRequest = {
+  request: WritableSignal<ICreateStudentRequest> = signal({
     name: "",
     subjects: []
-  }
+  });
 
   ngOnInit(): void {
     this.service.GetAvailableSubjects().pipe(take(1)).subscribe(x => {
@@ -33,10 +33,10 @@ export class CreateStudentComponent implements OnInit {
   }
 
   CreateStudent(){
-    if(this.request.name.trim() === "") return;
-    if(this.request.subjects.length === 0) return;
+    if(this.request().name.trim() === "") return;
+    if(this.request().subjects.length === 0) return;
 
-    this.service.CreateStudent(this.request).pipe(take(1)).subscribe(x => {
+    this.service.CreateStudent(this.request()).pipe(take(1)).subscribe(x => {
       if(x.isSuccessful){
         this._snackBar.open("Student created!", "Close");
         this.router.navigate(['/list-students']);
@@ -50,14 +50,14 @@ export class CreateStudentComponent implements OnInit {
         subjectId: option.id,
         isMajor: option.isMajor
       }
-      this.request.subjects.push(newOption);
+      this.request().subjects.push(newOption);
     } else {
-      this.request.subjects = this.request.subjects.filter(x => x.subjectId !== option.id);
+      this.request().subjects = this.request().subjects.filter(x => x.subjectId !== option.id);
     }
   }
 
   updateMajor(option: ISubjectDto){
-    this.request.subjects.forEach(x => x.isMajor = x.subjectId === option.id);
+    this.request().subjects.forEach(x => x.isMajor = x.subjectId === option.id);
     this.subjectOptions.forEach(x => x.isMajor = x.id === option.id);
   }
 }

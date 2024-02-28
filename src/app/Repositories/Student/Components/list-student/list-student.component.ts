@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, WritableSignal, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { StudentService } from '../../Services/student.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -18,11 +18,11 @@ export class ListStudentComponent implements OnInit {
 
   constructor(private service: StudentService, private _snackBar: MatSnackBar){}
 
-  students: IStudentModel[] = [];
+  students: WritableSignal<IStudentModel[]> = signal([]);
 
   ngOnInit(): void {
     this.service.GetAllStudents().pipe(take(1)).subscribe(x => {
-      this.students = x.list;
+      this.students.set(x.list);
     })
   }
 
@@ -34,7 +34,7 @@ export class ListStudentComponent implements OnInit {
     this.service.DeleteStudent(request).pipe(take(1)).subscribe(x => {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("Student deleted!", "Close");
-        this.students = x.getAllStudentsResponse.list;
+        this.students.set(x.getAllStudentsResponse.list);
       }
       else{
         this._snackBar.open("Something went wrong!", "Close");
@@ -52,7 +52,7 @@ export class ListStudentComponent implements OnInit {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("Major updated!", "Close");
       }
-      this.students = x.getAllStudentsResponse.list;
+      this.students.set(x.getAllStudentsResponse.list);
     })
   }
 }
