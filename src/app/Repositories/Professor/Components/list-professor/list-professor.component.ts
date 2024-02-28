@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, WritableSignal, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ProfessorService } from '../../Services/professor.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -17,11 +17,11 @@ export class ListProfessorComponent implements OnInit {
 
   constructor(private service: ProfessorService, private _snackBar: MatSnackBar){}
 
-  professors: IProfessorModel[] = [];
+  professors: WritableSignal<IProfessorModel[]> = signal([]);
 
   ngOnInit(): void {
     this.service.GetAllProfessors().pipe(take(1)).subscribe(x => {
-      this.professors = x.list;
+      this.professors.set(x.list);
     })
   }
 
@@ -33,7 +33,7 @@ export class ListProfessorComponent implements OnInit {
     this.service.DeleteProfessor(request).pipe(take(1)).subscribe(x => {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("Professor deleted!", "Close");
-        this.professors = x.getAllProfessorsResponse.list;
+        this.professors.set(x.getAllProfessorsResponse.list);
       }
       else{
         this._snackBar.open("Something went wrong!", "Close");
