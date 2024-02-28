@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, WritableSignal, signal } from '@angular/core';
 import { PrincipalService } from '../../Services/principal.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IPrincipalModel } from '../../Models/IPrincipalModel';
@@ -17,11 +17,11 @@ export class ListPrincipalComponent implements OnInit {
 
   constructor(private service: PrincipalService, private _snackBar: MatSnackBar){}
 
-  principals: IPrincipalModel[] = [];
+  principals: WritableSignal<IPrincipalModel[]> = signal([]);
 
   ngOnInit(): void {
     this.service.GetAllPrincipals().pipe(take(1)).subscribe(x => {
-      this.principals = x.list;
+      this.principals.set(x.list);
     })
   }
 
@@ -33,7 +33,7 @@ export class ListPrincipalComponent implements OnInit {
     this.service.DeletePrincipal(request).pipe(take(1)).subscribe(x => {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("Principal deleted!", "Close");
-        this.principals = x.getAllPrincipalsResponse.list;
+        this.principals.set(x.getAllPrincipalsResponse.list);
       }
       else{
         this._snackBar.open("Something went wrong!", "Close");
