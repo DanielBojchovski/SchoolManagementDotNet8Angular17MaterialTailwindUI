@@ -32,7 +32,7 @@ export class CreatePrincipalComponent implements OnInit {
   }
 
   CreatePrincipal(){
-    if(this.request.name.trim() === "" || this.request().schoolId === 0){
+    if(this.request().name.trim() === "" || this.request().schoolId === 0){
       this._snackBar.open("Invalid name or school not selected!", "Close");
       return;
     }
