@@ -1,32 +1,21 @@
 import { Routes } from '@angular/router';
-import { ListSchoolComponent } from './Repositories/School/Components/list-school/list-school.component';
-import { ListPrincipalComponent } from './Repositories/Principal/Components/list-principal/list-principal.component';
-import { CreatePrincipalComponent } from './Repositories/Principal/Components/create-principal/create-principal.component';
-import { UpdatePrincipalComponent } from './Repositories/Principal/Components/update-principal/update-principal.component';
-import { ListProfessorComponent } from './Repositories/Professor/Components/list-professor/list-professor.component';
-import { CreateProfessorComponent } from './Repositories/Professor/Components/create-professor/create-professor.component';
-import { UpdateProfessorComponent } from './Repositories/Professor/Components/update-professor/update-professor.component';
-import { ListSubjectComponent } from './Repositories/Subject/Components/list-subject/list-subject.component';
-import { ListStudentComponent } from './Repositories/Student/Components/list-student/list-student.component';
-import { CreateStudentComponent } from './Repositories/Student/Components/create-student/create-student.component';
-import { UpdateStudentComponent } from './Repositories/Student/Components/update-student/update-student.component';
 
 export const routes: Routes = [
     //school
-    { path: '', component: ListSchoolComponent },
-    { path: 'list-schools', component: ListSchoolComponent },
+    { path: '', loadComponent: () => import('./Repositories/School/Components/list-school/list-school.component').then(c => c.ListSchoolComponent) },
+    { path: 'list-schools', loadComponent: () => import('./Repositories/School/Components/list-school/list-school.component').then(c => c.ListSchoolComponent) },
     //principal
-    { path: 'list-principals', component: ListPrincipalComponent },
-    { path: 'create-principal', component: CreatePrincipalComponent },
-    { path: 'update-principal/:id', component: UpdatePrincipalComponent },
+    { path: 'list-principals', loadComponent: () => import('./Repositories/Principal/Components/list-principal/list-principal.component').then(c => c.ListPrincipalComponent) },
+    { path: 'create-principal', loadComponent: () => import('./Repositories/Principal/Components/create-principal/create-principal.component').then(c => c.CreatePrincipalComponent) },
+    { path: 'update-principal/:id', loadComponent: () => import('./Repositories/Principal/Components/update-principal/update-principal.component').then(c => c.UpdatePrincipalComponent) },
     //professor
-    { path: 'list-professors', component: ListProfessorComponent },
-    { path: 'create-professor', component: CreateProfessorComponent },
-    { path: 'update-professor/:id', component: UpdateProfessorComponent },
+    { path: 'list-professors', loadComponent: () => import('./Repositories/Professor/Components/list-professor/list-professor.component').then(c => c.ListProfessorComponent) },
+    { path: 'create-professor', loadComponent: () => import('./Repositories/Professor/Components/create-professor/create-professor.component').then(c => c.CreateProfessorComponent) },
+    { path: 'update-professor/:id', loadComponent: () => import('./Repositories/Professor/Components/update-professor/update-professor.component').then(c => c.UpdateProfessorComponent) },
     //subject
-    { path: 'list-subjects', component: ListSubjectComponent },
+    { path: 'list-subjects', loadComponent: () => import('./Repositories/Subject/Components/list-subject/list-subject.component').then(c => c.ListSubjectComponent) },
     //student
-    { path: 'list-students', component: ListStudentComponent },
-    { path: 'create-student', component: CreateStudentComponent },
-    { path: 'update-student/:id', component: UpdateStudentComponent },
+    { path: 'list-students', loadComponent: () => import('./Repositories/Student/Components/list-student/list-student.component').then(c => c.ListStudentComponent) },
+    { path: 'create-student', loadComponent: () => import('./Repositories/Student/Components/create-student/create-student.component').then(c => c.CreateStudentComponent) },
+    { path: 'update-student/:id', loadComponent: () => import('./Repositories/Student/Components/update-student/update-student.component').then(c => c.UpdateStudentComponent) },
 ];
