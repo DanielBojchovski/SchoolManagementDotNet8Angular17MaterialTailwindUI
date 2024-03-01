@@ -1,4 +1,4 @@
-import { Component, OnInit, WritableSignal, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SubjectService } from '../../Services/subject.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -7,6 +7,7 @@ import { take } from 'rxjs';
 import { ICreateSubjectRequest } from '../../Requests/ICreateSubjectRequest';
 import { IUpdateSubjectRequest } from '../../Requests/IUpdateSubjectRequest';
 import { IIdRequest } from '../../../../Common/Requests/IIdRequest';
+import { ISubjectViewModel } from '../../ViewModels/ISubjectViewModel';
 
 @Component({
   selector: 'app-list-subject',
@@ -19,33 +20,34 @@ export class ListSubjectComponent implements OnInit {
 
   constructor(private service: SubjectService,private _snackBar: MatSnackBar){}
 
-  subjects: WritableSignal<ISubjectModel[]> = signal([]);
-
-  subjectName: WritableSignal<string> = signal("");
+  viewModel: ISubjectViewModel = {
+    subjects: signal([]),
+    subjectName: signal("")
+  };
 
   ngOnInit(): void {
     this.service.GetAllSubjects().pipe(take(1)).subscribe(x => {
-      this.subjects.set(x.list);
+      this.viewModel.subjects.set(x.list);
     })
   }
 
   CreateSubject(){
-    if(this.subjectName().trim() === ""){
+    if(this.viewModel.subjectName().trim() === ""){
       return;
     }
 
     let request: ICreateSubjectRequest = {
-      name: this.subjectName()
+      name: this.viewModel.subjectName()
     }
 
     this.service.CreateSubject(request).pipe(take(1)).subscribe(x => {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("Subject created!", "Close");
-        this.subjects.set(x.getAllSubjectsResponse.list);
+        this.viewModel.subjects.set(x.getAllSubjectsResponse.list);
       }
     })
 
-    this.subjectName.set("");
+    this.viewModel.subjectName.set("");
   }
 
   UpdateSubject(school: ISubjectModel){
@@ -61,7 +63,7 @@ export class ListSubjectComponent implements OnInit {
     this.service.UpdateSubject(request).pipe(take(1)).subscribe(x => {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("Subject updated!", "Close");
-        this.subjects.set(x.getAllSubjectsResponse.list);
+        this.viewModel.subjects.set(x.getAllSubjectsResponse.list);
       }
     })
   }
@@ -74,7 +76,7 @@ export class ListSubjectComponent implements OnInit {
     this.service.DeleteSubject(request).pipe(take(1)).subscribe(x => {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("Subject deleted!", "Close");
-        this.subjects.set(x.getAllSubjectsResponse.list);
+        this.viewModel.subjects.set(x.getAllSubjectsResponse.list);
       }
     })
   }
