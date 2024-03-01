@@ -1,4 +1,4 @@
-import { Component, OnInit, WritableSignal, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { SchoolService } from '../../Services/school.service';
 import { take } from 'rxjs';
 import { ISchoolModel } from '../../Models/ISchoolModel';
@@ -7,6 +7,7 @@ import { ICreateSchoolRequest } from '../../Requests/ICreateSchoolRequest';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { IUpdateSchoolRequest } from '../../Requests/IUpdateSchoolRequest';
 import { IIdRequest } from '../../../../Common/Requests/IIdRequest';
+import { ISchoolViewModel } from '../../ViewModels/ISchoolViewModel';
 
 @Component({
   selector: 'app-list-school',
@@ -19,33 +20,34 @@ export class ListSchoolComponent implements OnInit {
 
   constructor(private service: SchoolService,private _snackBar: MatSnackBar){}
 
-  schools: WritableSignal<ISchoolModel[]> = signal([]);
-
-  schoolName: WritableSignal<string> = signal("");
+  viewModel: ISchoolViewModel = {
+    schools: signal([]),
+    schoolName: signal("")
+  };
 
   ngOnInit(): void {
     this.service.GetAllSchools().pipe(take(1)).subscribe(x => {
-      this.schools.set(x.list);
+      this.viewModel.schools.set(x.list);
     })
   }
 
   CreateSchool(){
-    if(this.schoolName().trim() === ""){
+    if(this.viewModel.schoolName().trim() === ""){
       return;
     }
 
     let request: ICreateSchoolRequest = {
-      name: this.schoolName()
+      name: this.viewModel.schoolName()
     }
 
     this.service.CreateSchool(request).pipe(take(1)).subscribe(x => {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("School created!", "Close");
-        this.schools.set(x.getAllSchoolsResponse.list);
+        this.viewModel.schools.set(x.getAllSchoolsResponse.list);
       }
     })
 
-    this.schoolName.set("");
+    this.viewModel.schoolName.set("");
   }
 
   UpdateSchool(school: ISchoolModel){
@@ -61,7 +63,7 @@ export class ListSchoolComponent implements OnInit {
     this.service.UpdateSchool(request).pipe(take(1)).subscribe(x => {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("School updated!", "Close");
-        this.schools.set(x.getAllSchoolsResponse.list);
+        this.viewModel.schools.set(x.getAllSchoolsResponse.list);
       }
     })
   }
@@ -74,7 +76,7 @@ export class ListSchoolComponent implements OnInit {
     this.service.DeleteSchool(request).pipe(take(1)).subscribe(x => {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("School deleted!", "Close");
-        this.schools.set(x.getAllSchoolsResponse.list);
+        this.viewModel.schools.set(x.getAllSchoolsResponse.list);
       }
     })
   }
