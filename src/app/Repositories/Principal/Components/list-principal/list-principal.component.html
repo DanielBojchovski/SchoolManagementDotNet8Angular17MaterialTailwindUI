@@ -26,7 +26,7 @@
           </tr>
         </thead>
         <tbody>
-            @for(principal of principals(); track $index){
+            @for(principal of viewModel.principals(); track $index){
                 <tr class="text-center px-6 py-4">
                     <td>{{principal.id}}</td>
                     <td>{{principal.name}}</td>

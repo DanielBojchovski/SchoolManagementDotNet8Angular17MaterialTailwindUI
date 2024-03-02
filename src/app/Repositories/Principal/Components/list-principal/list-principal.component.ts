@@ -1,10 +1,10 @@
-import { Component, OnInit, WritableSignal, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { PrincipalService } from '../../Services/principal.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { IPrincipalModel } from '../../Models/IPrincipalModel';
 import { take } from 'rxjs';
 import { RouterLink } from '@angular/router';
 import { IIdRequest } from '../../../../Common/Requests/IIdRequest';
+import { IListPrincipalViewModel } from '../../ViewModels/IListPrincipalViewModel';
 
 @Component({
   selector: 'app-list-principal',
@@ -17,11 +17,11 @@ export class ListPrincipalComponent implements OnInit {
 
   constructor(private service: PrincipalService, private _snackBar: MatSnackBar){}
 
-  principals: WritableSignal<IPrincipalModel[]> = signal([]);
+  viewModel: IListPrincipalViewModel = { principals: signal([]) };
 
   ngOnInit(): void {
     this.service.GetAllPrincipals().pipe(take(1)).subscribe(x => {
-      this.principals.set(x.list);
+      this.viewModel.principals.set(x.list);
     })
   }
 
@@ -33,7 +33,7 @@ export class ListPrincipalComponent implements OnInit {
     this.service.DeletePrincipal(request).pipe(take(1)).subscribe(x => {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("Principal deleted!", "Close");
-        this.principals.set(x.getAllPrincipalsResponse.list);
+        this.viewModel.principals.set(x.getAllPrincipalsResponse.list);
       }
       else{
         this._snackBar.open("Something went wrong!", "Close");
