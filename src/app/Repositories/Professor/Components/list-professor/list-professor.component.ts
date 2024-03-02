@@ -1,10 +1,10 @@
-import { Component, OnInit, WritableSignal, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ProfessorService } from '../../Services/professor.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { IProfessorModel } from '../../Models/IProfessorModel';
 import { take } from 'rxjs';
 import { IIdRequest } from '../../../../Common/Requests/IIdRequest';
+import { IListProfessorViewModel } from '../../ViewModels/IListProfessorViewModel';
 
 @Component({
   selector: 'app-list-professor',
@@ -17,11 +17,11 @@ export class ListProfessorComponent implements OnInit {
 
   constructor(private service: ProfessorService, private _snackBar: MatSnackBar){}
 
-  professors: WritableSignal<IProfessorModel[]> = signal([]);
+  viewModel: IListProfessorViewModel = { professors: signal([]) };
 
   ngOnInit(): void {
     this.service.GetAllProfessors().pipe(take(1)).subscribe(x => {
-      this.professors.set(x.list);
+      this.viewModel.professors.set(x.list);
     })
   }
 
@@ -33,7 +33,7 @@ export class ListProfessorComponent implements OnInit {
     this.service.DeleteProfessor(request).pipe(take(1)).subscribe(x => {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("Professor deleted!", "Close");
-        this.professors.set(x.getAllProfessorsResponse.list);
+        this.viewModel.professors.set(x.getAllProfessorsResponse.list);
       }
       else{
         this._snackBar.open("Something went wrong!", "Close");

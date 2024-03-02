@@ -26,7 +26,7 @@
           </tr>
         </thead>
         <tbody>
-            @for(professor of professors(); track $index){
+            @for(professor of viewModel.professors(); track $index){
                 <tr class="text-center px-6 py-4">
                     <td>{{professor.id}}</td>
                     <td>{{professor.name}}</td>
