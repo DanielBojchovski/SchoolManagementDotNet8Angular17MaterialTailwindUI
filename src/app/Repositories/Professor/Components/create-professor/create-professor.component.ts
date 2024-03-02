@@ -3,9 +3,9 @@ import { FormsModule } from '@angular/forms';
 import { ProfessorService } from '../../Services/professor.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { IDropDownItem } from '../../../../Common/Models/IDropDownItem';
 import { ICreateProfessorRequest } from '../../Requests/ICreateProfessorRequest';
 import { take } from 'rxjs';
+import { ICreateProfessorViewModel } from '../../ViewModels/ICreateProfessorViewModel';
 
 @Component({
   selector: 'app-create-professor',
@@ -18,26 +18,26 @@ export class CreateProfessorComponent implements OnInit{
 
   constructor(private service: ProfessorService, private _snackBar: MatSnackBar, private router: Router){}
 
-  schoolOptions: IDropDownItem[] = [];
-
-  request: WritableSignal<ICreateProfessorRequest> = signal({
-    name: "",
-    schoolId: 0
-  });
+  viewModel: ICreateProfessorViewModel = { name: signal(""), schoolId: signal(0), schoolOptions: signal([])};
 
   ngOnInit(): void {
     this.service.GetSchoolsDropDown().pipe(take(1)).subscribe(x => {
-      this.schoolOptions = x.list;
+      this.viewModel.schoolOptions.set(x.list);
     })
   }
 
   CreateProfessor(){
-    if(this.request().name.trim() === "" || this.request().schoolId === 0){
+    if(this.viewModel.name().trim() === "" || this.viewModel.schoolId() === 0){
       this._snackBar.open("Invalid name or school not selected!", "Close");
       return;
     }
 
-    this.service.CreateProfessor(this.request()).pipe(take(1)).subscribe(x => {
+    let request: WritableSignal<ICreateProfessorRequest> = signal({
+      name: this.viewModel.name(),
+      schoolId: this.viewModel.schoolId()
+    });
+
+    this.service.CreateProfessor(request()).pipe(take(1)).subscribe(x => {
       if(x.isSuccessful){
         this._snackBar.open("Professor created!", "Close");
         this.router.navigate(['/list-professors']);
