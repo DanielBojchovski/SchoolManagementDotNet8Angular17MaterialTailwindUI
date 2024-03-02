@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ProfessorService } from '../../Services/professor.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { take } from 'rxjs';
 import { IIdRequest } from '../../../../Common/Requests/IIdRequest';
-import { IInitUpdateProfessorResponse } from '../../Responses/IInitUpdateProfessorResponse';
 import { IUpdateProfessorRequest } from '../../Requests/IUpdateProfessorRequest';
+import { IUpdateProfessorViewModel } from '../../ViewModels/IUpdateProfessorViewModel';
 
 @Component({
   selector: 'app-update-professor',
@@ -19,7 +19,7 @@ export class UpdateProfessorComponent implements OnInit{
 
   constructor(private service: ProfessorService, private _snackBar: MatSnackBar, private router: Router, private activatedRoute: ActivatedRoute){ }
   
-  response!: IInitUpdateProfessorResponse;
+  viewModel: IUpdateProfessorViewModel = { id: signal(0), name: signal(""), schoolId: signal(0), schoolOptions: signal([])};
 
   ngOnInit(): void {
     this.activatedRoute.paramMap
@@ -29,7 +29,10 @@ export class UpdateProfessorComponent implements OnInit{
         if (id) {
           let idRequest: IIdRequest = {id: parseInt(id)};
           this.service.InitUpdateProfessor(idRequest).pipe(take(1)).subscribe(x => {
-              this.response = x;
+            this.viewModel.id.set(x.professor.id);
+            this.viewModel.name.set(x.professor.name);
+            this.viewModel.schoolId.set(x.professor.schoolId);
+            this.viewModel.schoolOptions.set(x.schoolOptions);
             })
         }
       }
@@ -37,10 +40,15 @@ export class UpdateProfessorComponent implements OnInit{
   }
 
   UpdatePrincipal(){
+    if(this.viewModel.name().trim() === "" || this.viewModel.schoolId() === 0){
+      this._snackBar.open("Invalid name or school not selected!", "Close");
+      return;
+    }
+
     let request: IUpdateProfessorRequest = {
-      id: this.response.professor.id,
-      name: this.response.professor.name,
-      schoolId:this.response.professor.schoolId
+      id: this.viewModel.id(),
+      name: this.viewModel.name(),
+      schoolId: this.viewModel.schoolId()
     }
 
     this.service.UpdateProfessor(request).pipe(take(1)).subscribe(x => {
