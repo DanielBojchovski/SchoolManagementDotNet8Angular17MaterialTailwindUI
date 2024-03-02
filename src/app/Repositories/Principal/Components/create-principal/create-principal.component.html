@@ -31,7 +31,7 @@
             <option disabled>No available options</option>
         }
         @else {
-            <option [value]="0">--</option>
+            <option disabled [value]="0">--</option>
             @for(school of viewModel.schoolOptions(); track $index){
                 <option [value]="school.id">{{school.name}}</option>
             }

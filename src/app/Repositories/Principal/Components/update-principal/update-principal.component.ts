@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PrincipalService } from '../../Services/principal.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IInitUpdatePrincipalResponse } from '../../Responses/IInitUpdatePrincipalResponse';
 import { take } from 'rxjs';
 import { IIdRequest } from '../../../../Common/Requests/IIdRequest';
 import { IUpdatePrincipalRequest } from '../../Requests/IUpdatePrincipalRequest';
+import { IUpdatePrincipalViewModel } from '../../ViewModels/IUpdatePrincipalViewModel';
 
 @Component({
   selector: 'app-update-principal',
@@ -19,7 +19,7 @@ export class UpdatePrincipalComponent implements OnInit {
 
   constructor(private service: PrincipalService, private _snackBar: MatSnackBar, private router: Router, private activatedRoute: ActivatedRoute){ }
 
-  response!: IInitUpdatePrincipalResponse;
+  viewModel: IUpdatePrincipalViewModel = { id: signal(0), name: signal(""), schoolId: signal(0), schoolOptions: signal([])};
 
   ngOnInit(): void {
     this.activatedRoute.paramMap
@@ -29,7 +29,10 @@ export class UpdatePrincipalComponent implements OnInit {
         if (id) {
           let idRequest: IIdRequest = {id: parseInt(id)};
           this.service.InitUpdatePrincipal(idRequest).pipe(take(1)).subscribe(x => {
-              this.response = x;
+              this.viewModel.id.set(x.principal.id);
+              this.viewModel.name.set(x.principal.name);
+              this.viewModel.schoolId.set(x.principal.schoolId);
+              this.viewModel.schoolOptions.set(x.schoolOptions);
             })
         }
       }
@@ -37,10 +40,15 @@ export class UpdatePrincipalComponent implements OnInit {
   }
 
   UpdatePrincipal(){
+    if(this.viewModel.name().trim() === "" || this.viewModel.schoolId() === 0){
+      this._snackBar.open("Invalid name or school not selected!", "Close");
+      return;
+    }
+
     let request: IUpdatePrincipalRequest = {
-      id: this.response.principal.id,
-      name: this.response.principal.name,
-      schoolId:this.response.principal.schoolId
+      id: this.viewModel.id(),
+      name: this.viewModel.name(),
+      schoolId: this.viewModel.schoolId()
     }
 
     this.service.UpdatePrincipal(request).pipe(take(1)).subscribe(x => {
