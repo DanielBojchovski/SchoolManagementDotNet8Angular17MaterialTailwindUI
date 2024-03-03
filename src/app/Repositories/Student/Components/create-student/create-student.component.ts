@@ -1,4 +1,4 @@
-import { Component, OnInit, WritableSignal, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { ICreateStudentRequest } from '../../Requests/ICreateStudentRequest';
 import { FormsModule } from '@angular/forms';
 import { StudentService } from '../../Services/student.service';
@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { ISubjectDto } from '../../../Subject/Models/ISubjectDto';
 import { take } from 'rxjs';
 import { ISubjectInfo } from '../../../Subject/Models/ISubjectInfo';
+import { ICreateStudentViewModel } from '../../ViewModels/ICreateStudentViewModel';
 
 @Component({
   selector: 'app-create-student',
@@ -19,24 +20,24 @@ export class CreateStudentComponent implements OnInit {
 
   constructor(private service: StudentService, private _snackBar: MatSnackBar, private router: Router){}
 
-  subjectOptions: ISubjectDto[] = [];
-
-  request: WritableSignal<ICreateStudentRequest> = signal({
-    name: "",
-    subjects: []
-  });
+  viewModel: ICreateStudentViewModel = { name: signal(""), selectedSubjects: signal([]), subjectOptions: signal([])};
 
   ngOnInit(): void {
     this.service.GetAvailableSubjects().pipe(take(1)).subscribe(x => {
-      this.subjectOptions = x.list;
+      this.viewModel.subjectOptions.set(x.list);
     })
   }
 
   CreateStudent(){
-    if(this.request().name.trim() === "") return;
-    if(this.request().subjects.length === 0) return;
+    if(this.viewModel.name().trim() === "") return;
+    if(this.viewModel.selectedSubjects().length === 0) return;
 
-    this.service.CreateStudent(this.request()).pipe(take(1)).subscribe(x => {
+    let request: ICreateStudentRequest = {
+      name: this.viewModel.name(),
+      subjects: this.viewModel.selectedSubjects()
+    };
+
+    this.service.CreateStudent(request).pipe(take(1)).subscribe(x => {
       if(x.isSuccessful){
         this._snackBar.open("Student created!", "Close");
         this.router.navigate(['/list-students']);
@@ -50,14 +51,14 @@ export class CreateStudentComponent implements OnInit {
         subjectId: option.id,
         isMajor: option.isMajor
       }
-      this.request().subjects.push(newOption);
+      this.viewModel.selectedSubjects().push(newOption);
     } else {
-      this.request().subjects = this.request().subjects.filter(x => x.subjectId !== option.id);
+      this.viewModel.selectedSubjects.set(this.viewModel.selectedSubjects().filter(x => x.subjectId !== option.id));
     }
   }
 
   updateMajor(option: ISubjectDto){
-    this.request().subjects.forEach(x => x.isMajor = x.subjectId === option.id);
-    this.subjectOptions.forEach(x => x.isMajor = x.id === option.id);
+    this.viewModel.selectedSubjects().forEach(x => x.isMajor = x.subjectId === option.id);
+    this.viewModel.subjectOptions().forEach(x => x.isMajor = x.id === option.id);
   }
 }
