@@ -1,11 +1,11 @@
-import { Component, OnInit, WritableSignal, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { StudentService } from '../../Services/student.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { IStudentModel } from '../../Models/IStudentModel';
 import { take } from 'rxjs';
 import { IIdRequest } from '../../../../Common/Requests/IIdRequest';
 import { ISetNewMajorForStudentRequest } from '../../Requests/ISetNewMajorForStudentRequest';
+import { IListStudentViewModel } from '../../ViewModels/IListStudentViewModel';
 
 @Component({
   selector: 'app-list-student',
@@ -18,11 +18,11 @@ export class ListStudentComponent implements OnInit {
 
   constructor(private service: StudentService, private _snackBar: MatSnackBar){}
 
-  students: WritableSignal<IStudentModel[]> = signal([]);
+  viewModel: IListStudentViewModel = { students: signal([]) };
 
   ngOnInit(): void {
     this.service.GetAllStudents().pipe(take(1)).subscribe(x => {
-      this.students.set(x.list);
+      this.viewModel.students.set(x.list);
     })
   }
 
@@ -34,7 +34,7 @@ export class ListStudentComponent implements OnInit {
     this.service.DeleteStudent(request).pipe(take(1)).subscribe(x => {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("Student deleted!", "Close");
-        this.students.set(x.getAllStudentsResponse.list);
+        this.viewModel.students.set(x.getAllStudentsResponse.list);
       }
       else{
         this._snackBar.open("Something went wrong!", "Close");
@@ -52,7 +52,7 @@ export class ListStudentComponent implements OnInit {
       if(x.operationStatusResponse.isSuccessful){
         this._snackBar.open("Major updated!", "Close");
       }
-      this.students.set(x.getAllStudentsResponse.list);
+      this.viewModel.students.set(x.getAllStudentsResponse.list);
     })
   }
 }
