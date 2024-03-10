@@ -1,0 +1,10 @@
+@if(viewModel.success()){
+    <h2 class="m-2">You have successfully confirmed you account</h2>
+    <a class="bg-cyan-500 rounded-lg mx-2" routerLink="/account/login">
+        Login
+    </a>
+
+    <a class="bg-cyan-500 rounded-lg mx-2" (click)="resendEmailConfirmationLink()">
+        Click here to resend email confirmation link
+    </a>
+}
