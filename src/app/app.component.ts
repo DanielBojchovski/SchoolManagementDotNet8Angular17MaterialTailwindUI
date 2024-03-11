@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { JwtService } from './Authentication/Services/jwt.service';
+import { LocalStorageAuthTokenName } from '../Consts';
 
 @Component({
   selector: 'app-root',
@@ -11,4 +13,11 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'SchoolManagementDotNet8Angular17MaterialTailwindUI';
+
+  constructor(public jwtService: JwtService, private router: Router){}
+
+  LogOut(){
+    localStorage.removeItem(LocalStorageAuthTokenName);
+    this.router.navigate([""]);
+  }
 }

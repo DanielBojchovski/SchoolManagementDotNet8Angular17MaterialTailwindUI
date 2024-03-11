@@ -6,6 +6,8 @@ import { IOperationStatusResponse } from '../../Common/Responses/IOperationStatu
 import { Observable } from 'rxjs';
 import { ConfirmEmailRequest } from '../Requests/ConfirmEmailRequest';
 import { ResendEmailConfirmationRequest } from '../Requests/ResendEmailConfirmationRequest';
+import { LoginRequest } from '../Requests/LoginRequest';
+import { LoginResponse } from '../Responses/LoginResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -26,5 +28,9 @@ export class AuthService {
 
   ResendEmailConfirmation(request: ResendEmailConfirmationRequest): Observable<IOperationStatusResponse> {
     return this.http.post<IOperationStatusResponse>(this.authUrl + "ResendEmailConfirmation", request);
+  }
+
+  Login(request: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(this.authUrl + "Login", request);
   }
 }
