@@ -19,6 +19,6 @@ export const routes: Routes = [
     { path: 'create-student', loadComponent: () => import('./Repositories/Student/Components/create-student/create-student.component').then(c => c.CreateStudentComponent) },
     { path: 'update-student/:id', loadComponent: () => import('./Repositories/Student/Components/update-student/update-student.component').then(c => c.UpdateStudentComponent) },
     //auth
-    { path: 'account/register',  loadComponent: () => import('./Account/Components/register/register.component').then(c => c.RegisterComponent)},
-    { path: 'account/confirm-email/:token/:email', loadComponent: () => import('./Account/Components/confirm-email/confirm-email.component').then(c => c.ConfirmEmailComponent)}
+    { path: 'account/register',  loadComponent: () => import('./Authentication/Components/register/register.component').then(c => c.RegisterComponent)},
+    { path: 'account/confirm-email/:token/:email', loadComponent: () => import('./Authentication/Components/confirm-email/confirm-email.component').then(c => c.ConfirmEmailComponent)}
 ];
