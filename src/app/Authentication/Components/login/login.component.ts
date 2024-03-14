@@ -45,7 +45,8 @@ export class LoginComponent implements OnInit {
     this.authService.Login(request).pipe(take(1)).subscribe(x => {
       if(x.isSuccessful){
         this._snackBar.open("You are logged in!", "Close");
-        this.jwtService.saveAuthToken(x.jwtToken);
+        this.jwtService.saveAuthToken(x.jwtToken!);
+        this.jwtService.saveRefreshToken(x.refreshToken!);
         let state = this.router.lastSuccessfulNavigation?.extras.state;
         if (state) {
           this.router.navigate([state['returnUrl']]);

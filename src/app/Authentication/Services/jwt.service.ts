@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { JwtModel } from '../Models/JwtModel';
-import { LocalStorageAuthTokenName } from '../../../Consts';
+import { LocalStorageAuthTokenName, LocalStorageRefreshTokenName } from '../../../Consts';
 import { jwtDecode } from "jwt-decode";
 
 @Injectable({
@@ -21,8 +21,16 @@ export class JwtService {
     localStorage.setItem(LocalStorageAuthTokenName, authToken);
   }
 
+  public saveRefreshToken(refreshToken: string): void {
+    localStorage.setItem(LocalStorageRefreshTokenName, refreshToken);
+  }
+
   public getAuthToken(): string | null {
     return localStorage.getItem(LocalStorageAuthTokenName);
+  }
+
+  public getRefreshToken(): string | null {
+    return localStorage.getItem(LocalStorageRefreshTokenName);
   }
 
   public getBearerToken(): string | null {
