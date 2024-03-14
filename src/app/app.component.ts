@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { JwtService } from './Authentication/Services/jwt.service';
-import { LocalStorageAuthTokenName } from '../Consts';
+import { LocalStorageAuthTokenName, LocalStorageRefreshTokenName } from '../Consts';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +18,7 @@ export class AppComponent {
 
   LogOut(){
     localStorage.removeItem(LocalStorageAuthTokenName);
+    localStorage.removeItem(LocalStorageRefreshTokenName);
     this.router.navigate([""]);
   }
 }

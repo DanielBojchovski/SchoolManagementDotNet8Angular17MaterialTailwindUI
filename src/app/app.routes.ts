@@ -21,5 +21,6 @@ export const routes: Routes = [
     //auth
     { path: 'account/register',  loadComponent: () => import('./Authentication/Components/register/register.component').then(c => c.RegisterComponent)},
     { path: 'account/confirm-email/:token/:email', loadComponent: () => import('./Authentication/Components/confirm-email/confirm-email.component').then(c => c.ConfirmEmailComponent)},
-    { path: 'account/login', loadComponent: () => import('./Authentication/Components/login/login.component').then(c => c.LoginComponent) }
+    { path: 'account/login', loadComponent: () => import('./Authentication/Components/login/login.component').then(c => c.LoginComponent) },
+    { path: 'account/change-password', loadComponent: () => import('./Authentication/Components/change-password/change-password.component').then(c => c.ChangePasswordComponent)}
 ];

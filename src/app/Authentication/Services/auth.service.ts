@@ -9,6 +9,7 @@ import { ResendEmailConfirmationRequest } from '../Requests/ResendEmailConfirmat
 import { LoginRequest } from '../Requests/LoginRequest';
 import { LoginResponse } from '../Responses/LoginResponse';
 import { RefreshTokenRequest } from '../Requests/RefreshTokenRequest';
+import { ChangePasswordRequest } from '../Requests/ChangePasswordRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +38,9 @@ export class AuthService {
 
   RefreshToken(request: RefreshTokenRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(this.authUrl + "RefreshToken", request);
+  }
+
+  ChangePassword(request: ChangePasswordRequest): Observable<IOperationStatusResponse> {
+    return this.http.post<IOperationStatusResponse>(this.authUrl + "ChangePassword", request);
   }
 }
