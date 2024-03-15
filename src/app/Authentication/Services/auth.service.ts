@@ -10,6 +10,8 @@ import { LoginRequest } from '../Requests/LoginRequest';
 import { LoginResponse } from '../Responses/LoginResponse';
 import { RefreshTokenRequest } from '../Requests/RefreshTokenRequest';
 import { ChangePasswordRequest } from '../Requests/ChangePasswordRequest';
+import { ForgotPasswordSendEmailRequest } from '../Requests/ForgotPasswordSendEmailRequest';
+import { ResetPasswordRequest } from '../Requests/ResetPasswordRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -42,5 +44,13 @@ export class AuthService {
 
   ChangePassword(request: ChangePasswordRequest): Observable<IOperationStatusResponse> {
     return this.http.post<IOperationStatusResponse>(this.authUrl + "ChangePassword", request);
+  }
+
+  ForgotPasswordSendEmail(request: ForgotPasswordSendEmailRequest): Observable<IOperationStatusResponse> {
+    return this.http.post<IOperationStatusResponse>(this.authUrl + "ForgotPasswordSendEmail", request);
+  }
+
+  ResetPassword(request: ResetPasswordRequest): Observable<IOperationStatusResponse> {
+    return this.http.post<IOperationStatusResponse>(this.authUrl + "ResetPassword", request);
   }
 }

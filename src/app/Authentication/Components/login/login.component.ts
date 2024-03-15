@@ -8,6 +8,7 @@ import { LocalStorageAuthTokenName } from '../../../../Consts';
 import { LoginRequest } from '../../Requests/LoginRequest';
 import { take } from 'rxjs';
 import { JwtService } from '../../Services/jwt.service';
+import { ForgotPasswordSendEmailRequest } from '../../Requests/ForgotPasswordSendEmailRequest';
 
 @Component({
   selector: 'app-login',
@@ -48,7 +49,7 @@ export class LoginComponent implements OnInit {
         this.jwtService.saveAuthToken(x.jwtToken!);
         this.jwtService.saveRefreshToken(x.refreshToken!);
         let state = this.router.lastSuccessfulNavigation?.extras.state;
-        if (state) {
+        if (state) {  
           this.router.navigate([state['returnUrl']]);
         }
         else {
@@ -57,6 +58,24 @@ export class LoginComponent implements OnInit {
       }
       else{
         this._snackBar.open("Invalid credentials!", "Close");
+      }
+    })
+  }
+
+  ForgotPassword(){
+    if(this.viewModel.email().trim() === ""){
+      this._snackBar.open("Must provide email for forgoten password!", "Close");
+      return;
+    }
+
+    let request: ForgotPasswordSendEmailRequest = {email: this.viewModel.email()};
+
+    this.authService.ForgotPasswordSendEmail(request).pipe(take(1)).subscribe(x => {
+      if(x.isSuccessful){
+        this._snackBar.open("Check your email to restore your password!", "Close");
+      }
+      else{
+        this._snackBar.open("Something went wrong!", "Close");
       }
     })
   }
