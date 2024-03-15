@@ -5,6 +5,7 @@ import { catchError, switchMap, throwError } from 'rxjs';
 import { RefreshTokenRequest } from '../Authentication/Requests/RefreshTokenRequest';
 import { AuthService } from '../Authentication/Services/auth.service';
 import { Router } from '@angular/router';
+import { LocalStorageAuthTokenName, LocalStorageRefreshTokenName } from '../../Consts';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
@@ -37,6 +38,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             }),
             catchError((err)=>{
               return throwError(()=>{
+                localStorage.removeItem(LocalStorageAuthTokenName);
+                localStorage.removeItem(LocalStorageRefreshTokenName);
                 router.navigate(['account/login']);
               })
             })
