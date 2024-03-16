@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './Guards/auth.guard';
 
 export const routes: Routes = [
     //school
@@ -24,4 +25,5 @@ export const routes: Routes = [
     { path: 'account/login', loadComponent: () => import('./Authentication/Components/login/login.component').then(c => c.LoginComponent) },
     { path: 'account/change-password', loadComponent: () => import('./Authentication/Components/change-password/change-password.component').then(c => c.ChangePasswordComponent)},
     { path: 'account/forgot-password/:token/:email', loadComponent: () => import('./Authentication/Components/forgot-password/forgot-password.component').then(c => c.ForgotPasswordComponent)},
+    { path: 'account/make-admin', loadComponent: () => import('./Authentication/Components/make-user-admin/make-user-admin.component').then(c => c.MakeUserAdminComponent) , canActivate: [authGuard],},
 ];

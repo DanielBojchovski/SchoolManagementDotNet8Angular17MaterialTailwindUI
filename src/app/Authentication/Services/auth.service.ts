@@ -12,6 +12,9 @@ import { RefreshTokenRequest } from '../Requests/RefreshTokenRequest';
 import { ChangePasswordRequest } from '../Requests/ChangePasswordRequest';
 import { ForgotPasswordSendEmailRequest } from '../Requests/ForgotPasswordSendEmailRequest';
 import { ResetPasswordRequest } from '../Requests/ResetPasswordRequest';
+import { UpdatePermissionRequest } from '../Requests/UpdatePermissionRequest';
+import { GetAvailableUsersResponse } from '../Responses/GetAvailableUsersResponse';
+import { GetAvailableUsersRequest } from '../Requests/GetAvailableUsersRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -52,5 +55,13 @@ export class AuthService {
 
   ResetPassword(request: ResetPasswordRequest): Observable<IOperationStatusResponse> {
     return this.http.post<IOperationStatusResponse>(this.authUrl + "ResetPassword", request);
+  }
+  
+  MakeAdmin(request: UpdatePermissionRequest): Observable<IOperationStatusResponse> {
+    return this.http.post<IOperationStatusResponse>(this.authUrl + "MakeAdmin", request);
+  }
+
+  GetAvailableUsers(request: GetAvailableUsersRequest): Observable<GetAvailableUsersResponse> {
+    return this.http.post<GetAvailableUsersResponse>(this.authUrl + "GetAvailableUsers", request);
   }
 }
