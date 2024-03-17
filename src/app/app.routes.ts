@@ -26,6 +26,7 @@ export const routes: Routes = [
     { path: 'account/change-password', loadComponent: () => import('./Authentication/Components/change-password/change-password.component').then(c => c.ChangePasswordComponent)},
     { path: 'account/forgot-password/:token/:email', loadComponent: () => import('./Authentication/Components/forgot-password/forgot-password.component').then(c => c.ForgotPasswordComponent)},
     { path: 'account/make-admin', loadComponent: () => import('./Authentication/Components/make-user-admin/make-user-admin.component').then(c => c.MakeUserAdminComponent) , canActivate: [authGuard],},
+    { path: 'account/google-login', loadComponent: () => import('./Authentication/Components/google-login/google-login.component').then(c => c.GoogleLoginComponent) },
 
     //not found
     { path: '**', loadComponent: () => import('./Common/Components/not-found/not-found.component').then(c => c.NotFoundComponent)}

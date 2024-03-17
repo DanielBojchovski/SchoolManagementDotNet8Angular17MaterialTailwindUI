@@ -15,6 +15,7 @@ import { ResetPasswordRequest } from '../Requests/ResetPasswordRequest';
 import { UpdatePermissionRequest } from '../Requests/UpdatePermissionRequest';
 import { GetAvailableUsersResponse } from '../Responses/GetAvailableUsersResponse';
 import { GetAvailableUsersRequest } from '../Requests/GetAvailableUsersRequest';
+import { GoogleLoginRequest } from '../Requests/GoogleLoginRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -63,5 +64,9 @@ export class AuthService {
 
   GetAvailableUsers(request: GetAvailableUsersRequest): Observable<GetAvailableUsersResponse> {
     return this.http.post<GetAvailableUsersResponse>(this.authUrl + "GetAvailableUsers", request);
+  }
+
+  GoogleLogin(request: GoogleLoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(this.authUrl + "GoogleLogin", request);
   }
 }

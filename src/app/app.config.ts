@@ -6,6 +6,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideServiceWorker } from '@angular/service-worker';
 import { authInterceptor } from './Interceptors/auth.interceptor';
+import { GoogleLoginProvider, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,6 +19,23 @@ export const appConfig: ApplicationConfig = {
     }),
     provideHttpClient(withInterceptors([
         authInterceptor
-    ]))
+    ])),
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              '475607389510-bescq2cnu6d4b562si46uvk1gm4700f4.apps.googleusercontent.com', {oneTapEnabled: false, prompt: 'consent'}
+            )
+          }
+        ],
+        onError: (err) => {
+          console.error(err);
+        }
+      } as SocialAuthServiceConfig,
+    }
   ]
 };

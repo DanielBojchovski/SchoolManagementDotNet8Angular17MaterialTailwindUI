@@ -4,7 +4,7 @@ import { AuthService } from '../../Services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { LoginViewModel } from '../../ViewModels/LoginViewModel';
-import { LocalStorageAuthTokenName } from '../../../../Consts';
+import { LocalStorageAuthTokenName, LocalStorageRefreshTokenName } from '../../../../Consts';
 import { LoginRequest } from '../../Requests/LoginRequest';
 import { take } from 'rxjs';
 import { JwtService } from '../../Services/jwt.service';
@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     localStorage.removeItem(LocalStorageAuthTokenName);
+    localStorage.removeItem(LocalStorageRefreshTokenName);
   }
 
   Login(){
