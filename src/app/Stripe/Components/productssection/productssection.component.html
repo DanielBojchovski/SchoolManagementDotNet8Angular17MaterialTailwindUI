@@ -1,0 +1,8 @@
+<p>productssection works!</p>
+
+@for(product of productsList; track product.id){
+    <div>{{product.name}}</div>
+    <div>{{product.description}}</div>
+    <button class="px-3 py-2 bg-cyan-500" (click)="Pay(product)">Buy</button>
+}
+

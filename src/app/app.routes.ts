@@ -28,6 +28,10 @@ export const routes: Routes = [
     { path: 'account/make-admin', loadComponent: () => import('./Authentication/Components/make-user-admin/make-user-admin.component').then(c => c.MakeUserAdminComponent) , canActivate: [authGuard],},
     { path: 'account/google-login', loadComponent: () => import('./Authentication/Components/google-login/google-login.component').then(c => c.GoogleLoginComponent) },
 
+    //stripe
+    { path: 'products', loadComponent: () => import('./Stripe/Components/productssection/productssection.component').then(c => c.ProductssectionComponent) },
+    { path: 'success', loadComponent: () => import('./Stripe/Components/success-page/success-page.component').then(c => c.SuccessPageComponent) },
+
     //not found
     { path: '**', loadComponent: () => import('./Common/Components/not-found/not-found.component').then(c => c.NotFoundComponent)}
 ];
